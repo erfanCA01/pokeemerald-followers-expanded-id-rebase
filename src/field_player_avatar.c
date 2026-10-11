@@ -604,18 +604,20 @@ static void PlayerNotOnBikeTurningInPlace(u8 direction, u16 heldKeys)
 {
     PlayerTurnInPlace(direction);
 }
-#define IS_CURRENT_MAP(map) (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(map) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(map))
+#define IS_CURRENT_MAP(map) (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_##map) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_##map))
 static bool8 IsNotRunnableMap(void)
 {
     // Gyms
     if (IS_CURRENT_MAP(RUSTBORO_CITY_GYM)
      || IS_CURRENT_MAP(DEWFORD_TOWN_GYM)
      || IS_CURRENT_MAP(MAUVILLE_CITY_GYM)
-     || IS_CURRENT_MAP(LAVARIDGE_TOWN_GYM)
+     || IS_CURRENT_MAP(LAVARIDGE_TOWN_GYM_1F)
+     || IS_CURRENT_MAP(LAVARIDGE_TOWN_GYM_B1F)
      || IS_CURRENT_MAP(PETALBURG_CITY_GYM)
      || IS_CURRENT_MAP(FORTREE_CITY_GYM)
      || IS_CURRENT_MAP(MOSSDEEP_CITY_GYM)
-     || IS_CURRENT_MAP(SOOTOPOLIS_CITY_GYM))
+     || IS_CURRENT_MAP(SOOTOPOLIS_CITY_GYM_1F)
+     || IS_CURRENT_MAP(SOOTOPOLIS_CITY_GYM_B1F))
     {
         return TRUE;
     }
