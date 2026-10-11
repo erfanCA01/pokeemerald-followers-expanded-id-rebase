@@ -23,6 +23,7 @@
 #include "wild_encounter.h"
 #include "link.h"
 #include "constants/map_types.h"
+#include "constants/map_groups.h"
 #include "constants/region_map_sections.h"
 #include "constants/abilities.h"
 #include "constants/event_objects.h"
@@ -603,18 +604,36 @@ static void PlayerNotOnBikeTurningInPlace(u8 direction, u16 heldKeys)
 {
     PlayerTurnInPlace(direction);
 }
+#define IS_CURRENT_MAP(map) (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(map) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(map))
 static bool8 IsNotRunnableMap(void)
 {
-    // All 8 Gyms use the Gym battle scene attribute
-    if (gMapHeader.battleType == MAP_BATTLE_SCENE_GYM)
+    // Gyms
+    if (IS_CURRENT_MAP(RUSTBORO_CITY_GYM)
+     || IS_CURRENT_MAP(DEWFORD_TOWN_GYM)
+     || IS_CURRENT_MAP(MAUVILLE_CITY_GYM)
+     || IS_CURRENT_MAP(LAVARIDGE_TOWN_GYM)
+     || IS_CURRENT_MAP(PETALBURG_CITY_GYM)
+     || IS_CURRENT_MAP(FORTREE_CITY_GYM)
+     || IS_CURRENT_MAP(MOSSDEEP_CITY_GYM)
+     || IS_CURRENT_MAP(SOOTOPOLIS_CITY_GYM))
+    {
         return TRUE;
+    }
 
-    // All Elite Four rooms, hallways, Champion room, and Hall of Fame share Ever Grande's section ID
-    if (gMapHeader.regionMapSectionId == MAPSEC_EVER_GRANDE_CITY)
+    // Elite Four & League Rooms
+    if (IS_CURRENT_MAP(EVER_GRANDE_CITY_SIDNEYS_ROOM)
+     || IS_CURRENT_MAP(EVER_GRANDE_CITY_PHOEBES_ROOM)
+     || IS_CURRENT_MAP(EVER_GRANDE_CITY_GLACIAS_ROOM)
+     || IS_CURRENT_MAP(EVER_GRANDE_CITY_DRAKES_ROOM)
+     || IS_CURRENT_MAP(EVER_GRANDE_CITY_CHAMPIONS_ROOM)
+     || IS_CURRENT_MAP(EVER_GRANDE_CITY_HALL_OF_FAME))
+    {
         return TRUE;
+    }
 
     return FALSE;
 }
+#undef IS_CURRENT_MAP
 static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys)
 {
     u8 collision = CheckForPlayerAvatarCollision(direction);
