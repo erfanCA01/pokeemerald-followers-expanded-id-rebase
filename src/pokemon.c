@@ -6368,6 +6368,20 @@ u32 CanSpeciesLearnTMHM(u16 species, u8 tm)
     }
 }
 
+static u16 GetPreEvolution(u16 species)
+{
+    int i, j;
+    for (i = 1; i < NUM_SPECIES; i++)
+    {
+        for (j = 0; j < EVOS_PER_MON; j++)
+        {
+            if (gEvolutionTable[i][j].targetSpecies == species)
+                return i;
+        }
+    }
+    return SPECIES_NONE;
+}
+
 u8 GetMoveRelearnerMoves(struct Pokemon *mon, u16 *moves)
 {
     u16 learnedMoves[MAX_MON_MOVES];
@@ -6379,29 +6393,33 @@ u8 GetMoveRelearnerMoves(struct Pokemon *mon, u16 *moves)
     for (i = 0; i < MAX_MON_MOVES; i++)
         learnedMoves[i] = GetMonData(mon, MON_DATA_MOVE1 + i, 0);
 
-    for (i = 0; i < MAX_LEVEL_UP_MOVES; i++)
+    while (species != SPECIES_NONE)
     {
-        u16 moveLevel;
-
-        if (gLevelUpLearnsets[species][i] == LEVEL_UP_END)
-            break;
-
-        moveLevel = gLevelUpLearnsets[species][i] & LEVEL_UP_MOVE_LV;
-
-        if (moveLevel <= (level << 9))
+        for (i = 0; i < MAX_LEVEL_UP_MOVES; i++)
         {
-            for (j = 0; j < MAX_MON_MOVES && learnedMoves[j] != (gLevelUpLearnsets[species][i] & LEVEL_UP_MOVE_ID); j++)
-                ;
+            u16 moveLevel;
 
-            if (j == MAX_MON_MOVES)
+            if (gLevelUpLearnsets[species][i] == LEVEL_UP_END)
+                break;
+
+            moveLevel = gLevelUpLearnsets[species][i] & LEVEL_UP_MOVE_LV;
+
+            if (moveLevel <= (level << 9))
             {
-                for (k = 0; k < numMoves && moves[k] != (gLevelUpLearnsets[species][i] & LEVEL_UP_MOVE_ID); k++)
+                for (j = 0; j < MAX_MON_MOVES && learnedMoves[j] != (gLevelUpLearnsets[species][i] & LEVEL_UP_MOVE_ID); j++)
                     ;
 
-                if (k == numMoves)
-                    moves[numMoves++] = gLevelUpLearnsets[species][i] & LEVEL_UP_MOVE_ID;
+                if (j == MAX_MON_MOVES)
+                {
+                    for (k = 0; k < numMoves && moves[k] != (gLevelUpLearnsets[species][i] & LEVEL_UP_MOVE_ID); k++)
+                        ;
+
+                    if (k == numMoves)
+                        moves[numMoves++] = gLevelUpLearnsets[species][i] & LEVEL_UP_MOVE_ID;
+                }
             }
         }
+        species = GetPreEvolution(species);
     }
 
     return numMoves;
@@ -6433,29 +6451,33 @@ u8 GetNumberOfRelearnableMoves(struct Pokemon *mon)
     for (i = 0; i < MAX_MON_MOVES; i++)
         learnedMoves[i] = GetMonData(mon, MON_DATA_MOVE1 + i, 0);
 
-    for (i = 0; i < MAX_LEVEL_UP_MOVES; i++)
+    while (species != SPECIES_NONE)
     {
-        u16 moveLevel;
-
-        if (gLevelUpLearnsets[species][i] == LEVEL_UP_END)
-            break;
-
-        moveLevel = gLevelUpLearnsets[species][i] & LEVEL_UP_MOVE_LV;
-
-        if (moveLevel <= (level << 9))
+        for (i = 0; i < MAX_LEVEL_UP_MOVES; i++)
         {
-            for (j = 0; j < MAX_MON_MOVES && learnedMoves[j] != (gLevelUpLearnsets[species][i] & LEVEL_UP_MOVE_ID); j++)
-                ;
+            u16 moveLevel;
 
-            if (j == MAX_MON_MOVES)
+            if (gLevelUpLearnsets[species][i] == LEVEL_UP_END)
+                break;
+
+            moveLevel = gLevelUpLearnsets[species][i] & LEVEL_UP_MOVE_LV;
+
+            if (moveLevel <= (level << 9))
             {
-                for (k = 0; k < numMoves && moves[k] != (gLevelUpLearnsets[species][i] & LEVEL_UP_MOVE_ID); k++)
+                for (j = 0; j < MAX_MON_MOVES && learnedMoves[j] != (gLevelUpLearnsets[species][i] & LEVEL_UP_MOVE_ID); j++)
                     ;
 
-                if (k == numMoves)
-                    moves[numMoves++] = gLevelUpLearnsets[species][i] & LEVEL_UP_MOVE_ID;
+                if (j == MAX_MON_MOVES)
+                {
+                    for (k = 0; k < numMoves && moves[k] != (gLevelUpLearnsets[species][i] & LEVEL_UP_MOVE_ID); k++)
+                        ;
+
+                    if (k == numMoves)
+                        moves[numMoves++] = gLevelUpLearnsets[species][i] & LEVEL_UP_MOVE_ID;
+                }
             }
         }
+        species = GetPreEvolution(species);
     }
 
     return numMoves;
