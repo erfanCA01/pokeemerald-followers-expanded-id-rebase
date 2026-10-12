@@ -787,10 +787,13 @@ static const u8 sMemoMiscTextColor[] = _("{COLOR WHITE}{SHADOW DARK_GRAY}"); // 
 static const u8 sStatsLeftColumnLayout[] = _("{DYNAMIC 0}/{DYNAMIC 1}\n{DYNAMIC 2}\n{DYNAMIC 3}");
 static const u8 sStatsRightColumnLayout[] = _("{DYNAMIC 0}\n{DYNAMIC 1}\n{DYNAMIC 2}");
 static const u8 sMovesPPLayout[] = _("{PP}{DYNAMIC 0}/{DYNAMIC 1}");
-static const u8 gText_StatsText[] = _("STATS");
-static const u8 gText_IVsText[]   = _("IVs");
-static const u8 gText_EVsText[]   = _("EVs");
+static const u8 gText_StatsText[] = _("STATS - ALL");
+static const u8 gText_IVsText[]   = _("STATS - IVs");
+static const u8 gText_EVsText[]   = _("STATS - EVs");
 static const u8 sStatsSingleColumnLayout[] = _("{DYNAMIC 0}\n{DYNAMIC 2}\n{DYNAMIC 3}");
+static const u8 sColorRed[] = _("{COLOR LIGHT_RED}{SHADOW GREEN}");
+static const u8 sColorBlue[] = _("{COLOR LIGHT_GREEN}{SHADOW BLUE}");
+static const u8 sColorDarkGray[] = _("{COLOR WHITE}{SHADOW DARK_GRAY}");
 
 #define TAG_MOVE_SELECTOR 30000
 #define TAG_MON_STATUS 30001
@@ -1138,6 +1141,24 @@ static const struct SpriteTemplate sSpriteTemplate_StatusCondition =
     .callback = SpriteCallbackDummy
 };
 static const u16 sMarkings_Pal[] = INCBIN_U16("graphics/summary_screen/markings.gbapal");
+
+static void FormatStatStr(u8 *dst, u16 val, u8 statIndex, u8 nature, u8 align)
+{
+    u8 statUp = (nature / 5) + 1;
+    u8 statDown = (nature % 5) + 1;
+    u8 temp[8];
+
+    ConvertIntToDecimalStringN(temp, val, STR_CONV_MODE_RIGHT_ALIGN, align);
+    
+    if (statUp != statDown && statIndex == statUp)
+        StringCopy(dst, sColorRed);
+    else if (statUp != statDown && statIndex == statDown)
+        StringCopy(dst, sColorBlue);
+    else
+        StringCopy(dst, sColorDarkGray);
+        
+    StringAppend(dst, temp);
+}
 
 // code
 void ShowPokemonSummaryScreen(u8 mode, void *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void))
@@ -3489,10 +3510,10 @@ static void PrintPromptStats(void)
 
 static void BufferLeftColumnStats(void)
 {
-    u8 *currentHPString = Alloc(8);
-    u8 *maxHPString = Alloc(8);
-    u8 *attackString = Alloc(8);
-    u8 *defenseString = Alloc(8);
+    u8 *currentHPString = Alloc(20);
+    u8 *maxHPString = Alloc(20);
+    u8 *attackString = Alloc(20);
+    u8 *defenseString = Alloc(20);
     struct PokeSummary *sum = &sMonSummaryScreen->summary;
 
     if (sMonSummaryScreen->statMode == 1) // IVs
@@ -3523,8 +3544,8 @@ static void BufferLeftColumnStats(void)
     {
         ConvertIntToDecimalStringN(currentHPString, sum->currentHP, STR_CONV_MODE_RIGHT_ALIGN, 3);
         ConvertIntToDecimalStringN(maxHPString, sum->maxHP, STR_CONV_MODE_RIGHT_ALIGN, 3);
-        ConvertIntToDecimalStringN(attackString, sum->atk, STR_CONV_MODE_RIGHT_ALIGN, 7);
-        ConvertIntToDecimalStringN(defenseString, sum->def, STR_CONV_MODE_RIGHT_ALIGN, 7);
+        FormatStatStr(attackString, sum->atk, 1, sum->nature, 7);
+        FormatStatStr(defenseString, sum->def, 2, sum->nature, 7);
 
         DynamicPlaceholderTextUtil_Reset();
         DynamicPlaceholderTextUtil_SetPlaceholderPtr(0, currentHPString);
@@ -3566,9 +3587,9 @@ static void BufferRightColumnStats(void)
     }
     else // Normal Stats
     {
-        ConvertIntToDecimalStringN(gStringVar1, sum->spatk, STR_CONV_MODE_RIGHT_ALIGN, 3);
-        ConvertIntToDecimalStringN(gStringVar2, sum->spdef, STR_CONV_MODE_RIGHT_ALIGN, 3);
-        ConvertIntToDecimalStringN(gStringVar3, sum->speed, STR_CONV_MODE_RIGHT_ALIGN, 3);
+        FormatStatStr(gStringVar1, sum->spatk, 4, sum->nature, 3);
+        FormatStatStr(gStringVar2, sum->spdef, 5, sum->nature, 3);
+        FormatStatStr(gStringVar3, sum->speed, 3, sum->nature, 3);
     }
 
     DynamicPlaceholderTextUtil_Reset();
