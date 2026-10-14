@@ -15,6 +15,7 @@
 #include "constants/berry.h"
 #include "constants/cable_club.h"
 #include "constants/coins.h"
+#include "constants/comparison_operators.h"
 #include "constants/contest.h"
 #include "constants/daycare.h"
 #include "constants/decorations.h"
@@ -41,6 +42,7 @@
 #include "constants/moves.h"
 #include "constants/party_menu.h"
 #include "constants/pokemon.h"
+#include "constants/pokemon_size_record.h"
 #include "constants/roulette.h"
 #include "constants/script_menu.h"
 #include "constants/secret_bases.h"
@@ -87,6 +89,8 @@ gSpecialVars::
 	.4byte gSpecialVar_Unused_0x8014
 	.4byte gTrainerBattleOpponent_A
 
+	.purgem def_special
+	.set ALLOCATE_SPECIAL_TABLE, 1
 	.include "data/specials.inc"
 
 gStdScripts::
@@ -730,7 +734,6 @@ EventScript_RegionMap::
 	msgbox Common_Text_LookCloserAtMap, MSGBOX_DEFAULT
 	fadescreen FADE_TO_BLACK
 	special FieldShowRegionMap
-	waitstate
 	releaseall
 	end
 
@@ -749,8 +752,7 @@ Common_EventScript_StopBrineysBoatMusic::
 @ Below could be split as ferry.inc aside from the Rusturf tunnel script
 Common_EventScript_FerryDepart::
 	delay 60
-	applymovement VAR_0x8004, Movement_FerryDepart
-	waitmovement 0
+	applywaitmovement VAR_0x8004, Movement_FerryDepart
 	return
 
 Movement_FerryDepart:
@@ -786,12 +788,10 @@ RusturfTunnel_EventScript_SetRusturfTunnelOpen::
 
 EventScript_UnusedBoardFerry::
 	delay 30
-	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
-	waitmovement 0
-	showobjectat LOCALID_PLAYER, 0
+	applywaitmovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
+	showplayer
 	delay 30
-	applymovement LOCALID_PLAYER, Movement_UnusedBoardFerry
-	waitmovement 0
+	applywaitmovement LOCALID_PLAYER, Movement_UnusedBoardFerry
 	delay 30
 	return
 
@@ -803,7 +803,7 @@ Common_EventScript_FerryDepartIsland::
 	call_if_eq VAR_FACING, DIR_SOUTH, Ferry_EventScript_DepartIslandSouth
 	call_if_eq VAR_FACING, DIR_WEST, Ferry_EventScript_DepartIslandWest
 	delay 30
-	hideobjectat LOCALID_PLAYER, 0
+	hideplayer
 	call Common_EventScript_FerryDepart
 	return
 
@@ -813,7 +813,6 @@ Common_EventScript_FerryDepartIsland::
 Common_EventScript_NameReceivedPartyMon::
 	fadescreen FADE_TO_BLACK
 	special ChangePokemonNickname
-	waitstate
 	return
 
 Common_EventScript_PlayerHandedOverTheItem::
