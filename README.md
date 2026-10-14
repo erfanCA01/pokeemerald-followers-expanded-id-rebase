@@ -1,3 +1,19 @@
+commit bf15e81c4d482874eb8f8a46b8cd7a2211f0667a (HEAD -> followers-expanded-id-merge)
+Merge: acc75ef3f 731ad5bfd
+Author:     erfanCA01 
+AuthorDate: Tue Oct 13 23:07:09 2026 -0400
+Commit:     erfanCA01 
+CommitDate: Tue Oct 13 23:07:09 2026 -0400
+
+    Merge upstream/master into followers-expanded-id
+    
+    Resolve all merge conflicts from pret/pokeemerald upstream:
+    - Retain follower logic (hidefollower, FLAG_SAFE_FOLLOWER_MOVEMENT, MovementType_FollowPlayer, GetObjectObjectCollidesWith, LARGE_OW_SUPPORT).
+    - Adopt modern pret naming: applywaitmovement macro, u8 direction params, ELEVATION_MULTI_LEVEL, CreateCopySpriteAt.
+    - Port follower sprite rules to modern INCGFX pipeline (object_event_graphics.h, sEmotion_Gfx); delete spritesheet_rules.mk.
+    - Migrate preproc/scaninc to upstream INCBIN_U8/U16/U32 identifier set.
+    - Document migrations in docs_merge/.
+
 # Pokémon Emerald
 
 This is a fork of the [matching decompilation](https://github.com/pret/pokeemerald) at [PRET](https://github.com/pret).
