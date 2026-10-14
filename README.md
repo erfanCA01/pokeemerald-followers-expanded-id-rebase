@@ -1,10 +1,3 @@
-commit bf15e81c4d482874eb8f8a46b8cd7a2211f0667a (HEAD -> followers-expanded-id-merge)
-Merge: acc75ef3f 731ad5bfd
-Author:     erfanCA01 
-AuthorDate: Tue Oct 13 23:07:09 2026 -0400
-Commit:     erfanCA01 
-CommitDate: Tue Oct 13 23:07:09 2026 -0400
-
     Merge upstream/master into followers-expanded-id
     
     Resolve all merge conflicts from pret/pokeemerald upstream:
