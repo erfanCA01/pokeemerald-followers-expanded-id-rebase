@@ -21,11 +21,13 @@ EventScript_CutTreeCommon:
 	setfieldeffectargument 3, VAR_0x8004 @ skip pose if so
 	dofieldeffect FLDEFF_USE_CUT_ON_TREE
 	waitstate
-EventScript_CutTreeDown:: @ fallthrough
+	goto EventScript_CutTreeDown
+	end
+
+EventScript_CutTreeDown::
 	setflag FLAG_SAFE_FOLLOWER_MOVEMENT
 	call_if_eq VAR_0x8004, TRUE, EventScript_FollowerFieldMove
-	applymovement VAR_LAST_TALKED, Movement_CutTreeDown
-	waitmovement 0
+	applywaitmovement VAR_LAST_TALKED, Movement_CutTreeDown
 	removeobject VAR_LAST_TALKED
 	releaseall
 	end
@@ -85,11 +87,13 @@ EventScript_RockSmashCommon:
 	setfieldeffectargument 3, VAR_0x8004 @ skip pose if so
 	dofieldeffect FLDEFF_USE_ROCK_SMASH
 	waitstate
-EventScript_SmashRock:: @ fallthrough
+	goto EventScript_SmashRock
+	end
+
+EventScript_SmashRock::
 	setflag FLAG_SAFE_FOLLOWER_MOVEMENT
 	call_if_eq VAR_0x8004, TRUE, EventScript_FollowerFieldMove
-	applymovement VAR_LAST_TALKED, Movement_SmashRock
-	waitmovement 0
+	applywaitmovement VAR_LAST_TALKED, Movement_SmashRock
 	removeobject VAR_LAST_TALKED
 	specialvar VAR_RESULT, TryUpdateRusturfTunnelState
 	goto_if_eq VAR_RESULT, TRUE, EventScript_EndSmash

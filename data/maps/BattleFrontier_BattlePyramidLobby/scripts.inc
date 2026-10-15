@@ -136,7 +136,6 @@ BattleFrontier_BattlePyramidLobby_EventScript_TryEnterChallenge::
 	copyvar VAR_0x8004, VAR_RESULT
 	setvar VAR_0x8005, FRONTIER_PARTY_SIZE
 	special ChoosePartyForBattleFrontier
-	waitstate
 	goto_if_eq VAR_RESULT, 0, BattleFrontier_BattlePyramidLobby_EventScript_LoadPartyAndCancelChallenge
 	msgbox BattleFrontier_BattlePyramidLobby_Text_OkayToSaveBeforeChallenge, MSGBOX_YESNO
 	switch VAR_RESULT
@@ -205,8 +204,7 @@ BattleFrontier_BattlePyramidLobby_EventScript_EndCancelChallenge::
 
 BattleFrontier_BattlePyramidLobby_EventScript_HintGiver::
 	lockall
-	applymovement LOCALID_PYRAMID_LOBBY_HINT_GIVER, Common_Movement_FacePlayer
-	waitmovement 0
+	applywaitmovement LOCALID_PYRAMID_LOBBY_HINT_GIVER, Common_Movement_FacePlayer
 	msgbox BattleFrontier_BattlePyramidLobby_Text_TellYouWhatMisfortunesAwait, MSGBOX_DEFAULT
 	call BattleFrontier_BattlePyramidLobby_EventScript_GiveHint
 	msgbox BattleFrontier_BattlePyramidLobby_Text_BelieveMyFortunesOrNot, MSGBOX_DEFAULT
@@ -385,10 +383,8 @@ BattleFrontier_BattlePyramidLobby_EventScript_ReceiveBattleBag::
 	waitse
 	msgbox BattleFrontier_BattlePyramidLobby_Text_StepOnFloorPanel, MSGBOX_DEFAULT
 	closemessage
-	applymovement LOCALID_PYRAMID_LOBBY_ATTENDANT, BattleFrontier_BattlePyramidLobby_Movement_AttendantMoveAside
-	waitmovement 0
-	applymovement LOCALID_PLAYER, BattleFrontier_BattlePyramidLobby_Movement_PlayerStepOnPanel
-	waitmovement 0
+	applywaitmovement LOCALID_PYRAMID_LOBBY_ATTENDANT, BattleFrontier_BattlePyramidLobby_Movement_AttendantMoveAside
+	applywaitmovement LOCALID_PLAYER, BattleFrontier_BattlePyramidLobby_Movement_PlayerStepOnPanel
 	return
 
 BattleFrontier_BattlePyramidLobby_Movement_AttendantWalkToPanel:
@@ -448,7 +444,6 @@ BattleFrontier_BattlePyramidLobby_EventScript_PickItemsToKeep::
 
 BattleFrontier_BattlePyramidLobby_EventScript_PickItemsFromBag::
 	special ChooseItemsToTossFromPyramidBag
-	waitstate
 	message BattleFrontier_BattlePyramidLobby_Text_PickItemsToKeep
 	waitmessage
 	goto BattleFrontier_BattlePyramidLobby_EventScript_PickItemsToKeep
@@ -456,7 +451,6 @@ BattleFrontier_BattlePyramidLobby_EventScript_PickItemsFromBag::
 
 BattleFrontier_BattlePyramidLobby_EventScript_PickItemsFromParty::
 	special BattlePyramidChooseMonHeldItems
-	waitstate
 	message BattleFrontier_BattlePyramidLobby_Text_PickItemsToKeep
 	waitmessage
 	goto BattleFrontier_BattlePyramidLobby_EventScript_PickItemsToKeep
